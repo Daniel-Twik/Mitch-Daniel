@@ -728,7 +728,7 @@ function create_addtc_buttons(selector) {
         let add_btn = document.createElement('button');
         add_btn.innerHTML = `<a>ADD TO CART</a>`;
         add_btn.style.textDecoration = 'underline';
-        add_btn.firstElementChild.style.textDecorationColor = '#800000';
+        add_btn.firstElementChild.style.textDecorationColor = '#c07282';
         add_btn.firstElementChild.style.fontSize = '1.3em';
         add_btn.firstElementChild.style.color = 'black';
         temp_item.style.textAlign = 'center';
@@ -740,9 +740,12 @@ function create_addtc_buttons(selector) {
         // on any button click
         add_btn.onclick = function() {
             add_btn.innerHTML = `<a>Adding...</a>`;
-            add_btn.firstElementChild.style.textDecorationColor = '#800000';
+            add_btn.firstElementChild.style.textDecorationColor = '#c07282';
             add_btn.firstElementChild.style.fontSize = '1.3em';
             add_btn.firstElementChild.style.color = 'black';
+
+            sessionStorage.setItem("added", "true");
+
             // get product's json data from product page
             let data = Get(data_url);
             setTimeout(function() {
@@ -858,10 +861,20 @@ function find_prev_cart_data() {
 
 // run script:
 
+// open cart side panel if item was just added
+let added = sessionStorage.getItem("added");
+if (added == "true") {
+    console.log("[+] Twik has just added an item, opening cart...");
+    document.getElementById("sidebar-cart").setAttribute("aria-hidden", "false");
+    sessionStorage.setItem("added", "false");
+} else {
+    console.log("[-] Twik added no previous item added, cart staying hidden...");
+}
+
 // find and store page_products_selector:
 product_finder();
 
-let has_addtc = check_for_addtc(page_products_selector)
+let has_addtc = check_for_addtc(page_products_selector);
 
 if(has_addtc == true) {
     console.log("[-] Add to cart button already detected by Twik");
